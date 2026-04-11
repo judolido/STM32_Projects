@@ -1,0 +1,8 @@
+../Core/Src/sd_image_loader.c:19:6:SD_LoadFullScreenImage	12
+../Core/Src/sd_image_loader.c:89:6:SD_LoadPartialImage	12
+../Core/Src/sd_image_loader.c:151:6:SD_PlayAnimation	3
+../Core/Src/sd_image_loader.c:177:6:SD_GetImageInfo	8
+../Core/Src/sd_image_loader.c:233:6:SD_CreateTestImage	8
+../Core/Src/sd_image_loader.c:282:6:Example_DisplayLogo	2
+../Core/Src/sd_image_loader.c:297:6:Example_CreateTestPattern	1
+../Core/Src/sd_image_loader.c:315:6:Example_PlayAnimationLoop	1

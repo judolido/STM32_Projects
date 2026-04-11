@@ -1,0 +1,11 @@
+../Core/Src/uart_terminal.c:31:6:UART_Terminal_Init	32	static
+../Core/Src/uart_terminal.c:61:6:UART_Terminal_RegisterCommands	16	static
+../Core/Src/uart_terminal.c:69:6:UART_Terminal_Process	24	static
+../Core/Src/uart_terminal.c:118:13:UART_Terminal_ExecuteCommand	64	static
+../Core/Src/uart_terminal.c:156:13:UART_Terminal_ShowHelp	16	static
+../Core/Src/uart_terminal.c:169:6:UART_Terminal_Print	24	static
+../Core/Src/uart_terminal.c:176:6:UART_Terminal_Printf	284	static
+../Core/Src/uart_terminal.c:188:6:UART_Print	16	static
+../Core/Src/uart_terminal.c:197:6:UART_Printf	272	static
+../Core/Src/uart_terminal.c:211:6:UART_Terminal_TaskLoop	8	static
+../Core/Src/uart_terminal.c:222:6:HAL_UART_RxCpltCallback	16	static

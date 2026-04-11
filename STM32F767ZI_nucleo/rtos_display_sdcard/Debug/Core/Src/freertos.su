@@ -1,0 +1,2 @@
+../Core/Src/freertos.c:59:6:vApplicationIdleHook	4	static
+../Core/Src/freertos.c:65:10:FreeRTOS_GetIdleCounter	4	static
