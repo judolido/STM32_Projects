@@ -1,0 +1,2 @@
+../Drivers/CustomDrivers/source/SDdriver.c:53:6:SD_Init	56	static
+../Drivers/CustomDrivers/source/SDdriver.c:111:6:SD_SendCMD	400	static
