@@ -33,7 +33,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define TS_CAL1_ADDR ((uint16_t*) 0x1FFF75A8)
+#define TS_CAL2_ADDR ((uint16_t*) 0x1FFF75CA)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -109,15 +110,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-  HAL_GPIO_TogglePin(LED1_PORT, LED1_PIN);
-	  HAL_Delay(200);
 	  HAL_ADC_Start(&hadc1);
-	  HAL_ADC_ConfigChannel(&hadc1, ADC_CHANNEL_TEMPSENSOR);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	      uint32_t adc_val = HAL_ADC_GetValue(&hadc1) * (3.0 /3.1);
 
-	  temp = HAL_ADC_GetValue(&hadc1);
+	      // Calibration values are typically at 3.0V or 3.3V reference
+	      // This formula assumes your VREF+ is the same as the factory test voltage
+	      float cal1 = (float)*TS_CAL1_ADDR;
+	      float cal2 = (float)*TS_CAL2_ADDR;
+
+	      temp = ((130.0f - 30.0f) / (cal2 - cal1)) * (adc_val - cal1) + 30.0f;
+
 	      char buff[50];
-	      int len = snprintf(buff, sizeof(buff), "The temp is : %f.02 C \r\n", temp);
-	      HAL_UART_Transmit(&huart1, (uint8_t*) buff, len, 100); // Using polling is safer here
+	      // Use %.2f for decimal precision; %f.02 is not standard syntax
+	      int len = snprintf(buff, sizeof(buff), "The temp is: %.2f C\r\n", temp);
+	      HAL_UART_Transmit(&huart1, (uint8_t*)buff, len, 100);
+	  }
+	  HAL_GPIO_TogglePin(LED1_PORT, LED1_PIN);
+	  HAL_Delay(500);
   }
     /* USER CODE END WHILE */
 
@@ -218,7 +228,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_6;
+  sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -296,10 +306,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|GPIO_PIN_7, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PA0 PA7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_7;
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
