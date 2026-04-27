@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "sd_image_loader.h"
+#include "SPI.h"
 
 /* External handles from main.c */
 extern SPI_HandleTypeDef hspi1;      /* SD Card SPI */
@@ -55,6 +56,11 @@ SD_CardInfo sd_card;
 
 /* UART Terminal object */
 UART_Terminal_t uart_terminal;
+
+/*
+ * General-Use SPI object
+ */
+Gen_SPI_info Gen_SPI;
 
 /* FatFs objects - declared in CubeMX's fatfs.c, populated by MX_FATFS_Init().
  * USERPath is set to "0:" by FATFS_LinkDriver() at startup. */
@@ -119,6 +125,7 @@ static float alpha = 0;
 static uint8_t forward = 1;
 /* Function prototypes */
 void StartDisplayTask(void *argument);
+void StartSPITask(void *argument);
 void StartSDCardTask(void *argument);
 void StartUARTTask(void *argument);
 
@@ -266,6 +273,10 @@ void FreeRTOS_AppInit(void) {
     display_config.tim_channel = TIM_CHANNEL_1;
     display_config.dma_tx_complete_callback = NULL;
 
+    /* --- GEN SPI2 config --- */
+    Gen_SPI.cs_pin = GPIO_PIN_4;
+    Gen_SPI.cs_port = GPIOA;
+	Gen_SPI.hspi = &hspi2;
     /*
      * ST7735_Init() does:
      *   - Starts PWM backlight
@@ -298,6 +309,13 @@ void FreeRTOS_AppInit(void) {
     };
     displayTaskHandle = osThreadNew(StartDisplayTask, NULL, &displayTask_attributes);
 
+    const osThreadAttr_t SPITask_attributes = {
+        .name = "displayTask",
+        .stack_size = 1024 * 4,
+        .priority = (osPriority_t) osPriorityNormal,
+    };
+    displayTaskHandle = osThreadNew(StartSPITask, NULL, &SPITask_attributes);
+
     const osThreadAttr_t sdCardTask_attributes = {
         .name = "sdCardTask",
         .stack_size = 1024 * 4,
@@ -323,6 +341,10 @@ void FreeRTOS_AppInit(void) {
  * clear the busy flag. We yield with osDelay(1) instead of spinning so other
  * tasks and interrupts get CPU time.
  */
+void StartSPITask(void *argument) {
+
+}
+
 void StartDisplayTask(void *argument) {
     uint32_t counter = 0;
 
@@ -858,6 +880,7 @@ void CMD_Pendulum(int argc, char *argv[])
 	osMessageQueuePut(displayCommandQueueHandle, &msg, 0, 0);
 	UART_Printf("Drawing a pendulum \r\n");
 }
+
 void CMD_Pattern(int argc, char *argv[])
 {
 	DisplayMessage_t msg = {
@@ -868,8 +891,6 @@ void CMD_Pattern(int argc, char *argv[])
 	//UART_Printf("SDPath = '%s'\r\n", SDPath);
 	UART_Printf("Drawing a gradient \r\n");
 }
-
-
 
 void CMD_Home(int argc, char *argv[]) {
     (void)argc; (void)argv;

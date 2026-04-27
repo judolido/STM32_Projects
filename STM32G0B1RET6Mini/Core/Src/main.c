@@ -23,7 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,9 +49,12 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 #define LED1_PORT GPIOA
-
-
 #define LED1_PIN GPIO_PIN_0
+
+#define LED2_PORT GPIOA
+#define LED2_PIN GPIO_PIN_1
+
+volatile uint32_t heat_val = 123;
 
 /* USER CODE END PV */
 
@@ -104,12 +107,15 @@ int main(void)
   //HAL_ADC_Start(&hadc1);
   //HAL_ADC_Stop(&hadc1);
   float temp;
+  volatile static uint16_t convert = 5000;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if (convert == 5000){
+
 	  HAL_ADC_Start(&hadc1);
 	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
 	      uint32_t adc_val = HAL_ADC_GetValue(&hadc1) * (3.0 /3.1);
@@ -126,8 +132,19 @@ int main(void)
 	      int len = snprintf(buff, sizeof(buff), "The temp is: %.2f C\r\n", temp);
 	      HAL_UART_Transmit(&huart1, (uint8_t*)buff, len, 100);
 	  }
+	  convert = 0;
+	  	  	  	  }
+
 	  HAL_GPIO_TogglePin(LED1_PORT, LED1_PIN);
-	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
+      heat_val = pow(heat_val, 1.1);
+      heat_val *= 4;
+      heat_val *= heat_val;
+      heat_val /= 123;
+      convert++;
+
+
+	  //HAL_Delay(500);
   }
     /* USER CODE END WHILE */
 
@@ -217,8 +234,8 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = DISABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-  hadc1.Init.SamplingTimeCommon1 = ADC_SAMPLETIME_1CYCLE_5;
-  hadc1.Init.SamplingTimeCommon2 = ADC_SAMPLETIME_1CYCLE_5;
+  hadc1.Init.SamplingTimeCommon1 = ADC_SAMPLETIME_160CYCLES_5;
+  hadc1.Init.SamplingTimeCommon2 = ADC_SAMPLETIME_160CYCLES_5;
   hadc1.Init.OversamplingMode = DISABLE;
   hadc1.Init.TriggerFrequencyMode = ADC_TRIGGER_FREQ_HIGH;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -309,7 +326,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PA0 PA7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

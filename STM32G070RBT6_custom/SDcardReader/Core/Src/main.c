@@ -141,6 +141,7 @@ char txt2[] = "Reading the first 1Mbytes 32Mhz\r\n";
   while (1)
   {
 	  HAL_GPIO_TogglePin(LED2_PORT, LED2_PIN);
+	  HAL_GPIO_TogglePin(LED1_PORT, LED1_PIN);
 	  HAL_Delay(1000);
 
     /* USER CODE END WHILE */

@@ -66,8 +66,8 @@ all: main-build
 main-build: STM32G0B1RET6Mini.elf secondary-outputs
 
 # Tool invocations
-STM32G0B1RET6Mini.elf STM32G0B1RET6Mini.map: $(OBJS) $(USER_OBJS) C:\Users\Vitek\Desktop\projects\STM32_Projects\STM32G0B1RET6Mini\STM32G0B1RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32G0B1RET6Mini.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\Vitek\Desktop\projects\STM32_Projects\STM32G0B1RET6Mini\STM32G0B1RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32G0B1RET6Mini.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32G0B1RET6Mini.elf STM32G0B1RET6Mini.map: $(OBJS) $(USER_OBJS) C:\Users\jelen\Desktop\projects\STM32_Projects\STM32G0B1RET6Mini\STM32G0B1RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32G0B1RET6Mini.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\jelen\Desktop\projects\STM32_Projects\STM32G0B1RET6Mini\STM32G0B1RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32G0B1RET6Mini.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
