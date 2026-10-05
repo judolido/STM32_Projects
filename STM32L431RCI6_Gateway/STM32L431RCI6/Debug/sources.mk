@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (14.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 ELF_SRCS := 
@@ -25,4 +25,16 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32L4xx_HAL_Driver/Src \
+Drivers/W5500/AAC \
+Drivers/W5500/DHCP \
+Drivers/W5500/DHCP6 \
+Drivers/W5500/DNS \
+Drivers/W5500/MQTT \
+Drivers/W5500/MQTT/MQTTPacket/src \
+Drivers/W5500/SNMP \
+Drivers/W5500/SNTP \
+Drivers/W5500/TFTP \
+Drivers/W5500/W5500 \
+Drivers/W5500/httpServer \
+Drivers/W5500 \
 

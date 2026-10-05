@@ -1,0 +1,6 @@
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:27:5:MQTTSerialize_connectLength	8
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:61:5:MQTTSerialize_connect	11
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:132:5:MQTTDeserialize_connack	3
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:170:5:MQTTSerialize_zero	2
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:198:5:MQTTSerialize_disconnect	1
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTConnectClient.c:209:5:MQTTSerialize_pingreq	1

@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (14.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -9,6 +9,18 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include Drivers/W5500/httpServer/subdir.mk
+-include Drivers/W5500/W5500/subdir.mk
+-include Drivers/W5500/TFTP/subdir.mk
+-include Drivers/W5500/SNTP/subdir.mk
+-include Drivers/W5500/SNMP/subdir.mk
+-include Drivers/W5500/MQTT/MQTTPacket/src/subdir.mk
+-include Drivers/W5500/MQTT/subdir.mk
+-include Drivers/W5500/DNS/subdir.mk
+-include Drivers/W5500/DHCP6/subdir.mk
+-include Drivers/W5500/DHCP/subdir.mk
+-include Drivers/W5500/AAC/subdir.mk
+-include Drivers/W5500/subdir.mk
 -include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
@@ -60,8 +72,8 @@ all: main-build
 main-build: STM32L431RCI6.elf secondary-outputs
 
 # Tool invocations
-STM32L431RCI6.elf STM32L431RCI6.map: $(OBJS) $(USER_OBJS) C:\Users\judol\Desktop\Projects\STM32_Projects\STM32L431RCI6_Gateway\STM32L431RCI6\STM32L431RCIX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32L431RCI6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\judol\Desktop\Projects\STM32_Projects\STM32L431RCI6_Gateway\STM32L431RCI6\STM32L431RCIX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L431RCI6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32L431RCI6.elf STM32L431RCI6.map: $(OBJS) $(USER_OBJS) C:\Users\Vitek\Desktop\projects\STM32_Projects\STM32L431RCI6_Gateway\STM32L431RCI6\STM32L431RCIX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32L431RCI6.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Vitek\Desktop\projects\STM32_Projects\STM32L431RCI6_Gateway\STM32L431RCI6\STM32L431RCIX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L431RCI6.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

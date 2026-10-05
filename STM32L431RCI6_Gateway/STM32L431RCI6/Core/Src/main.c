@@ -23,7 +23,9 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "w5500.h"
-
+#include "wizchip_conf.h"
+#include "socket.h"
+#include "../Drivers/W5500/DHCP/dhcp.h"
 
 /* USER CODE END Includes */
 
@@ -32,8 +34,14 @@
 
 /* USER CODE END PTD */
 
+
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define W5500_CS_port GPIOB
+#define W5500_CS_pin GPIO_PIN_12
+#define W5500_RST_port GPIOC
+#define W5500_RST_pin GPIO_PIN_5
 
 /* USER CODE END PD */
 
@@ -68,7 +76,11 @@ static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void W5500_Select(void);
+void W5500_Unselect(void);
+uint8_t W5500_ReadByte(void);
+void W5500_WriteByte(uint8_t wb);
+void W5500_Reset(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -114,21 +126,29 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+#define DHCP_Socket 0
+uint8_t DHCP_buffer[1024];
+  W5500_Reset();
+  reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
+  reg_wizchip_spi_cbfunc(W5500_ReadByte, W5500_WriteByte);
+  uint8_t bufSize[] = {2,2,2,2,2,2,2,2};
+  if (wizchip_init(bufSize, bufSize) < 0){
+	  while(1);
+  }
+   wiz_NetInfo netInfo = {
+		   .mac = {0x00, 0x08, 0xDC, 0x11, 0x22, 0x34},
+		   //.ip = {192, 168, 1, 150},
+		   .sn = {255, 255, 255, 0},
+		   .gw = {192, 168, 1, 1},
+		   .dns = {8, 8, 8, 8},
+		   .dhcp = NETINFO_DHCP
 
+   };
 
-
-    if (W5500_Init(&hspi2, &huart1))
-     {
-         uint8_t mac[6] = {0x00,0x08,0xDC,0x11,0x22,0x33};
-         uint8_t ip[4]  = {192,168,1,50};
-         uint8_t sn[4]  = {255,255,255,0};
-         uint8_t gw[4]  = {192,168,1,1};
-         W5500_SetMAC(mac);
-         W5500_SetIP(ip, sn, gw);
-     }
-     W5500_PrintStatus();
-     //W5500_Reset();
-
+ctlnetwork(CN_SET_NETINFO, (void*)&netInfo);
+setSHAR(netInfo.mac);
+DHCP_init(DHCP_Socket, DHCP_buffer);
+uint8_t chip_ver = getVERSIONR();
 
 
   /* USER CODE END 2 */
@@ -137,6 +157,21 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if (chip_ver != 0x04){
+		  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		  HAL_Delay(100);
+	  }
+	  if (HAL_GPIO_ReadPin(BTN1_GPIO_Port, BTN1_Pin) == GPIO_PIN_SET){
+
+		  HAL_Delay(200);
+	  }
+	  uint8_t dhcp_status = DHCP_run();
+	  if (dhcp_status == DHCP_IP_LEASED){
+		  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+	  }
+
+	  /*
+	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	  HAL_Delay(100);
 	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	  HAL_Delay(100);
@@ -147,9 +182,9 @@ int main(void)
 	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	  HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+*/
 
-	   W5500_PrintStatus();
-	   HAL_Delay(1000);
+
 
 
 
@@ -521,6 +556,37 @@ int __io_putchar(int ch)
     HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
     return ch;
 }
+
+void W5500_Select(void){
+	HAL_GPIO_WritePin(W5500_CS_port, W5500_CS_pin, GPIO_PIN_RESET);
+}
+
+void W5500_Unselect(void){
+	HAL_GPIO_WritePin(W5500_CS_port, W5500_CS_pin, GPIO_PIN_SET);
+}
+
+uint8_t W5500_ReadByte(void){
+	uint8_t rb = 0xFF;
+	uint8_t wb = 0xFF;
+	HAL_SPI_TransmitReceive(&hspi2, &wb, &rb, 1, HAL_MAX_DELAY);
+	return rb;
+}
+void W5500_WriteByte(uint8_t wb){
+	HAL_SPI_Transmit(&hspi2, &wb, 1, HAL_MAX_DELAY);
+
+}
+
+void W5500_Reset(void) {
+	HAL_GPIO_WritePin(W5500_RST_port, W5500_RST_pin, GPIO_PIN_RESET);
+	HAL_Delay(10);
+	HAL_GPIO_WritePin(W5500_RST_port, W5500_RST_pin, GPIO_PIN_SET);
+	HAL_Delay(50);
+}
+
+
+
+
+
 /* USER CODE END 4 */
 
 /**

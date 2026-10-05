@@ -1,0 +1,2 @@
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTDeserializePublish.c:36:5:MQTTDeserialize_publish	48	static
+../Drivers/W5500/MQTT/MQTTPacket/src/MQTTDeserializePublish.c:84:5:MQTTDeserialize_ack	48	static
