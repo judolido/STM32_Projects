@@ -26,6 +26,8 @@
 #include "wizchip_conf.h"
 #include "socket.h"
 #include "../Drivers/W5500/DHCP/dhcp.h"
+#include "app.h"
+#include "bridge.h"
 
 /* USER CODE END Includes */
 
@@ -126,71 +128,18 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-#define DHCP_Socket 0
-uint8_t DHCP_buffer[1024];
-  W5500_Reset();
-  reg_wizchip_cs_cbfunc(W5500_Select, W5500_Unselect);
-  reg_wizchip_spi_cbfunc(W5500_ReadByte, W5500_WriteByte);
-  uint8_t bufSize[] = {2,2,2,2,2,2,2,2};
-  if (wizchip_init(bufSize, bufSize) < 0){
-	  while(1);
-  }
-   wiz_NetInfo netInfo = {
-		   .mac = {0x00, 0x08, 0xDC, 0x11, 0x22, 0x34},
-		   //.ip = {192, 168, 1, 150},
-		   .sn = {255, 255, 255, 0},
-		   .gw = {192, 168, 1, 1},
-		   .dns = {8, 8, 8, 8},
-		   .dhcp = NETINFO_DHCP
-
-   };
-
-ctlnetwork(CN_SET_NETINFO, (void*)&netInfo);
-setSHAR(netInfo.mac);
-DHCP_init(DHCP_Socket, DHCP_buffer);
-uint8_t chip_ver = getVERSIONR();
-
-
+  app_init();
+  uint8_t text[10] = "Hello!";
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (chip_ver != 0x04){
-		  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-		  HAL_Delay(100);
-	  }
-	  if (HAL_GPIO_ReadPin(BTN1_GPIO_Port, BTN1_Pin) == GPIO_PIN_SET){
-
-		  HAL_Delay(200);
-	  }
-	  uint8_t dhcp_status = DHCP_run();
-	  if (dhcp_status == DHCP_IP_LEASED){
-		  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-	  }
-
-	  /*
-	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(LED3_GPIO_Port, LED2_Pin);
-	  HAL_Delay(100);
-	  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED3_Pin);
+	  app_poll();
+	  bridge_rs485_send(text, 10);
 	  HAL_Delay(300);
-	  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-	  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-	  HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-*/
-
-
-
-
-
-
-
-
+	  app_poll();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

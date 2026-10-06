@@ -1,0 +1,16 @@
+../Core/Src/app.c:39:13:spi_wb	1
+../Core/Src/app.c:40:13:spi_rb	1
+../Core/Src/app.c:42:13:fatal_blink	1
+../Core/Src/app.c:44:13:on_msg	1
+../Core/Src/app.c:46:6:app_reply	2
+../Core/Src/app.c:53:6:app_publish_info	1
+../Core/Src/app.c:62:6:app_publish_stats	1
+../Core/Src/app.c:75:5:app_udp_send	2
+../Core/Src/app.c:80:12:json_str	7
+../Core/Src/app.c:91:13:udp_task	6
+../Core/Src/app.c:108:12:put_hex	2
+../Core/Src/app.c:114:13:flush_can	9
+../Core/Src/app.c:128:13:flush_rs485	4
+../Core/Src/app.c:142:13:buttons_poll	4
+../Core/Src/app.c:156:6:app_init	4
+../Core/Src/app.c:184:6:app_poll	14

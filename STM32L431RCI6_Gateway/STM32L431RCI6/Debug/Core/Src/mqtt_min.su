@@ -1,0 +1,14 @@
+../Core/Src/mqtt_min.c:32:17:put_u16	16	static
+../Core/Src/mqtt_min.c:33:17:put_str	24	static
+../Core/Src/mqtt_min.c:36:17:put_rl	24	static
+../Core/Src/mqtt_min.c:41:13:drop_	16	static
+../Core/Src/mqtt_min.c:48:12:send_all	32	static
+../Core/Src/mqtt_min.c:69:12:send_connect	272	static
+../Core/Src/mqtt_min.c:82:13:send_subscribes	152	static
+../Core/Src/mqtt_min.c:92:13:handle_packet	40	static
+../Core/Src/mqtt_min.c:130:13:pump_rx	40	static
+../Core/Src/mqtt_min.c:175:6:mqtt_init	32	static
+../Core/Src/mqtt_min.c:187:6:mqtt_connected	4	static
+../Core/Src/mqtt_min.c:188:10:mqtt_reconnects	4	static
+../Core/Src/mqtt_min.c:190:5:mqtt_publish	40	static
+../Core/Src/mqtt_min.c:203:6:mqtt_task	24	static
